@@ -80,4 +80,4 @@ args = parser.parse_args()
 sample = get_sample(model, args.prompt, args.length, args.count, args.allow_breakline)
 n = 100
 for s in sample:
-    print('\n'.join([s[i:i+n] for i in range(0, len(s), n)])
+    print('\n'.join([s[i:i+n] for i in range(0, len(s), n)]))
