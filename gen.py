@@ -6,6 +6,7 @@ from run_generation import sample_sequence
 from yt_encoder import YTEncoder
 from transformers import GPT2LMHeadModel
 import threading
+import argparse
 import regex as re
 
 from os import environ
@@ -78,6 +79,21 @@ parser.add_argument("--allow_breakline", type=bool, default=False)
 args = parser.parse_args()
 
 sample = get_sample(model, args.prompt, args.length, args.count, args.allow_breakline)
-n = 100
+
+def split_string(str, limit, sep=" "):
+    words = str.split()
+    if max(map(len, words)) > limit:
+        raise ValueError("limit is too small")
+    res, part, others = [], words[0], words[1:]
+    for word in others:
+        if len(sep)+len(word) > limit-len(part):
+            res.append(part)
+            part = word
+        else:
+            part += sep+word
+    if part:
+        res.append(part)
+    return res
+
 for s in sample:
-    print('\n'.join([s[i:i+n] for i in range(0, len(s), n)]))
+    print('\n'.join(split_string(str=s, limit=100)))
